@@ -6,12 +6,16 @@ import java.util.Scanner;
 
 
 public class App {
-    public static AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    public AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     private static final String COMMANDS = "show commands; show cart; show products; add id; remove id; add all; remove all; new cart; exit";
-    private static Cart cart;
+    private Cart cart;
 
 
     public static void main(String[] args) {
+        new App().start();
+
+    }
+    public void start(){
         cart = newCart();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome! If you want to know more about available commands please input show commands");
@@ -43,7 +47,7 @@ public class App {
         context.close();
     }
 
-    private static void checkAnotherCommand(String msg) {
+    private void checkAnotherCommand(String msg) {
         if (msg.startsWith("add")) {
             try {
                 String s = msg.split(" ")[1];
@@ -63,7 +67,7 @@ public class App {
         } else System.out.println("Unknown command");
     }
 
-    public static Cart newCart() {
+    private Cart newCart() {
         System.out.println("New cart created");
         return context.getBean("cart",Cart.class);
     }

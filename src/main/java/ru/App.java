@@ -8,38 +8,39 @@ import java.util.Scanner;
 public class App {
     public static AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     private static final String COMMANDS = "show commands; show cart; show products; add id; remove id; add all; remove all; new cart; exit";
-    static Cart cart = newCart();
+    private static Cart cart;
 
 
     public static void main(String[] args) {
-
+        cart = newCart();
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome! If you want to know more about available commands please input show commands");
         String msg;
         while (!(msg = scanner.nextLine()).equals("exit")){
-               switch(msg){
-                   case "show commands":
-                       System.out.println(COMMANDS);
-                       break;
-                   case "show cart":
-                       System.out.println(cart.items);
-                       break;
-                   case "add all":
-                       cart.addAllProducts();
-                       System.out.println(cart.items);
-                       break;
-                   case "remove all":
-                       cart.removeAllProducts();
-                       System.out.println("Cart is empty");
-                       break;
-                   case "new cart":
-                       newCart();
-                       break;
-                   case "show products":
-                       System.out.println(cart.productRepository.getProductList());
-                       break;
-                   default: checkAnotherCommand(msg);
-               }
+            switch(msg){
+                case "show commands":
+                    System.out.println("Available commands: " + COMMANDS.replace(";"," "));
+                    break;
+                case "show cart":
+                    cart.showCart();
+                    break;
+                case "add all":
+                    cart.addAllProducts();
+                    break;
+                case "remove all":
+                    cart.removeAllProducts();
+                    break;
+                case "new cart":
+                    cart = newCart();
+                    break;
+                case "show products":
+                    cart.showProducts();
+                    break;
+                default: checkAnotherCommand(msg);
+                    break;
+            }
         }
+        context.close();
     }
 
     private static void checkAnotherCommand(String msg) {
@@ -63,6 +64,7 @@ public class App {
     }
 
     public static Cart newCart() {
+        System.out.println("New cart created");
         return context.getBean("cart",Cart.class);
     }
 

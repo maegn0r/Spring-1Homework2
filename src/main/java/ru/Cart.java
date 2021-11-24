@@ -11,16 +11,34 @@ import java.util.Map;
 
 
 @Component
-@Scope("prototype")
-@Data
+@Scope(value = "prototype")
 public class Cart {
-    Map<Product, Integer> items;
-    ProductRepository productRepository;
+    private Map<Product, Integer> items;
+    private ProductRepository productRepository;
 
     @Autowired
-    public Cart (ProductRepository productRepository){
+    public Cart(ProductRepository productRepository) {
         this.items = new HashMap<>();
         this.productRepository = productRepository;
+    }
+
+    public void showCart(){
+        if (items.isEmpty()){
+            System.out.println("Cart is empty");
+        } else {
+            System.out.println("Cart contains:");
+
+            for (Map.Entry<Product, Integer> entry : items.entrySet()) {
+                System.out.printf("%s [id: %d], price: %.1f $ | quantity: %d \n", entry.getKey().getName(),
+                        entry.getKey().getId(),
+                        entry.getKey().getPrice(),
+                        entry.getValue());
+            }
+        }
+    }
+
+    public void showProducts(){
+        productRepository.printItems();
     }
 
     public void addProduct (int id){
@@ -34,7 +52,7 @@ public class Cart {
         if (product == null){
             System.out.println("Product not found");
         } else {
-             if (items.containsKey(product)){
+            if (items.containsKey(product)){
                 items.computeIfPresent(product,(key,value) -> value - 1);
                 if (items.containsValue(0)){
                     items.remove(product);
@@ -51,5 +69,7 @@ public class Cart {
     }
     public void removeAllProducts (){
         items.clear();
+        System.out.println("Cart is empty");
     }
+
 }
